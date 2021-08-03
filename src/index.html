@@ -6,8 +6,31 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <h1>Connections</h1>
-        <span style='font-size:100px;'>&#129309;</span>
-        <!-- smaller handshake: <p>&#129309;</p> -->
+        <header>
+            <h1>Connections</h1>
+            <span style='font-size:100px;'>&#129309;</span>
+            <!-- smaller handshake: <p>&#129309;</p> -->
+        </header>
+        <main>
+            <!-- Form for storing connections -->
+            <!-- name input -->
+            <!-- email input -->
+            <!-- phone number input -->
+            <!-- Save button -->
+            <div id="connections-form">
+                <form>
+                    <label for="name_input">Name</label>
+                    <input name="name_input" type="text" value="" />
+                    <br />
+                    <label for="email_input">Email</label>
+                    <input name="email_input" type="email" value="" />
+                    <br />
+                    <label for="phone_input">Phone</label>
+                    <input name="phone_input" type="tel" value="" placeholder="Optional" />
+                    <br />
+                    <input type="submit" value="Save Connection" />
+                </form>
+            </div>
+        </main>
     </body>
 </html>
