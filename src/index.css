@@ -1,12 +1,31 @@
 
-main {
-
+body {
+    margin: 0;
 }
 
-h1 {
+main {
+    background-color: aqua;
+}
 
+#heading {
+    text-align: center;
 }
 
 #connections-form {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
 
+input {
+    margin-top: 10px;
+    padding: 5px;
+    width: 50%;
+    border: 1px solid yellow;
+}
+
+.save-btn {
+    background-color: yellow;
+    margin-top: 10px;
+    padding: 5px;
 }

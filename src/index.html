@@ -4,11 +4,14 @@
         <title>Connections</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="index.css" rel="stylesheet" />
     </head>
     <body>
         <header>
-            <h1>Connections</h1>
-            <span style='font-size:100px;'>&#129309;</span>
+            <div id="heading">
+                <h1>Connections</h1>
+                <span style='font-size:100px;'>&#129309;</span>
+            </div>
             <!-- smaller handshake: <p>&#129309;</p> -->
         </header>
         <main>
@@ -28,7 +31,8 @@
                     <label for="phone_input">Phone</label>
                     <input name="phone_input" type="tel" value="" placeholder="Optional" />
                     <br />
-                    <input type="submit" value="Save Connection" />
+                    <label></label>
+                    <button class="save-btn">Save Connection</button>
                 </form>
             </div>
         </main>
