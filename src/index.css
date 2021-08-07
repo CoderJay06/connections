@@ -1,6 +1,7 @@
 
 body {
     margin: 0;
+    background-color: wheat;
 }
 
 main {
@@ -9,6 +10,9 @@ main {
 
 #heading {
     text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-shadow: black;
+    font-style: italic;
 }
 
 #connections-form {
@@ -42,4 +46,10 @@ input:hover {
     margin-left: 20px;
     padding: 5px;
     border-radius: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bolder;
+}
+
+.save-btn:hover {
+    opacity: 70%;
 }
