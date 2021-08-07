@@ -16,16 +16,30 @@ main {
     margin: auto;
     text-align: center;
 }
+label {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    font-size: 15px;
+}
 
 input {
     margin-top: 10px;
+    margin-left: 5px;
     padding: 5px;
     width: 50%;
-    border: 1px solid yellow;
+    border: 2px solid yellow;
+    border-radius: 10px;
+    opacity: 85%;
+}
+
+input:hover {
+    opacity: 70%;
 }
 
 .save-btn {
     background-color: yellow;
     margin-top: 10px;
+    margin-left: 20px;
     padding: 5px;
+    border-radius: 10px;
 }
