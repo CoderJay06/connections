@@ -5,7 +5,7 @@ body {
 }
 
 main {
-    background-color: aqua;
+    margin: auto;
 }
 
 #heading {
@@ -17,7 +17,11 @@ main {
 
 #connections-form {
     display: block;
-    margin: auto;
+    background-color: aqua;
+    margin: 0 10px 0 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
     text-align: center;
 }
 label {
