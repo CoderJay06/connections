@@ -1,6 +1,6 @@
 /* functions to test:
 
-        - getName(), getEmail(), getPhone(), getForm()
+        - getName(), getEmail(), getPhone(), getForm(), getButton()
         - handleSave()
 */
 
@@ -21,9 +21,43 @@ describe("getForm()", () => {
     it("Gets form from the dom", () => {
         // act
         const result = getForm();
-        console.log(result)
+
         // assert
         expect(result.id).toBe("connections-form");
     })
 });
 
+describe("getInputs()", () => {
+    let input;
+    beforeEach(() => {
+        input = getInputs();
+    });
+
+    it("gets name input", () => {
+        const result = input.getName();
+
+        expect(result.name).toBe("name");
+    });
+
+    it("gets email input", () => {
+        const result = input.getEmail();
+
+        expect(result.name).toBe("email");
+    });
+
+    it("gets phone input", () => {
+        const result = input.getPhone();
+
+        expect(result.name).toBe("phone");
+    });
+});
+
+describe("getButton()", () => {
+    it("Gets button element from the dom", () => {
+        // act
+        const result = getButton();
+
+        // assert
+        expect(result.innerText).toBe("Save Connection");
+    })
+});
