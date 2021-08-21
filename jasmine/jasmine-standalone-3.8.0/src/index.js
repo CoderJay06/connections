@@ -16,7 +16,7 @@ function printConnections(connections) {
 }
 
 function getForm() {
-    console.log(document)
-    console.log(document.getElementById("connections-form"));
     return document.getElementById("connections-form");
 }
+
+
