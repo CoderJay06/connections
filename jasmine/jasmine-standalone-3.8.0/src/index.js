@@ -13,8 +13,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     // set up a module to hold dom elements
-    getForm();
-    getInputs();
+    const form = getForm();
+    const connections = [];
+
+    saveConnectionsOnClick(connections);
 });
 
 function getForm() {
@@ -22,28 +24,51 @@ function getForm() {
 }
 
 function getInputs() {
-    const inputs = (function() {
-        const form = getForm();
+    return (
+        function() {
+            const form = getForm();
 
-        return {
-            getName: function() {
-                return form.children[0];
-            },
+            return {
+                getName: function() {
+                    return form.children[0];
+                },
 
-            getEmail: function() {
-                return form.children[2];
-            },
+                getEmail: function() {
+                    return form.children[2];
+                },
 
-            getPhone: function() {
-                return form.children[4];
-            },
-        }
+                getPhone: function() {
+                    return form.children[4];
+                },
+            }
     })();
-    return inputs;
 }
 
 function getButton() {
     return document.querySelector(".save-btn");
+}
+
+function saveConnectionsOnClick(connections) {
+    const saveBtn = getButton();
+
+    // handle saving connection
+    saveBtn.addEventListener("click", () => {
+        // get user inputs from form
+        const inputs = getInputs();
+        const nameInput = inputs.getName().value;
+        const emailInput = inputs.getEmail().value;
+        const phoneInput = inputs.getPhone().value;
+
+        // store inputs in an array
+        connections.push({
+            name: nameInput,
+            email: emailInput,
+            phone: phoneInput
+        });
+        console.log(connections)
+        // save inputs in localStorage
+        localStorage.setItem("connections", JSON.stringify(connections));
+    });
 }
 
 function printConnections(connections) {
