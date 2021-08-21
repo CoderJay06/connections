@@ -31,6 +31,7 @@ label {
 }
 
 input {
+    display: inline-block;
     margin-top: 10px;
     margin-left: 5px;
     padding: 5px;
@@ -45,11 +46,12 @@ input:hover {
 }
 
 .save-btn {
+    display: inline-block;
     background-color: yellow;
-    margin-top: 10px;
-    margin-left: 20px;
-    padding: 5px;
+    margin: 15px auto;
+    padding: 5px 15px;
     border-radius: 10px;
+    text-decoration: none;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: bolder;
 }
