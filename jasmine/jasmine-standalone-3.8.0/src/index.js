@@ -12,16 +12,18 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // set up a module to hold dom elements
-    const form = getForm();
     const connections = [];
+    let connectionsFromLocalStorage = [];
 
     saveConnectionsOnClick(connections);
-});
+    connectionsFromLocalStorage = getConnections();
 
-function getForm() {
-    return document.getElementById("connections-form");
-}
+
+    // append connections to dom as a list
+    if (connectionsFromLocalStorage) {
+        render(connectionsFromLocalStorage);
+    }
+});
 
 function getInputs() {
     return (
@@ -42,6 +44,10 @@ function getInputs() {
                 },
             }
     })();
+}
+
+function getForm() {
+    return document.getElementById("connections-form");
 }
 
 function getButton() {
@@ -69,6 +75,32 @@ function saveConnectionsOnClick(connections) {
         // save inputs in localStorage
         localStorage.setItem("connections", JSON.stringify(connections));
     });
+}
+
+function render(connections) {
+    // create a new list, li and grab its container
+    const list = createConnectionsList();
+    let li = document.createElement("li");
+    const container = document.querySelector(".connections-list-container");
+
+    // render connections to the dom as an unordered list
+    connections.map(connection => {
+        li.innerHTML = `<a href="#">${connection.name}</a>`;
+        list.appendChild(li);
+    });
+
+    container.appendChild(list);
+}
+
+function getConnections() {
+    // get connections from local storage and return them
+    return JSON.parse(localStorage.getItem("connections"));
+}
+
+function createConnectionsList() {
+    const ul = document.createElement("ul");
+    ul.className = "connections-list";
+    return ul;
 }
 
 function printConnections(connections) {

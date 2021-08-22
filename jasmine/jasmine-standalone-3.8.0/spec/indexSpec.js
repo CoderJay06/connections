@@ -61,3 +61,19 @@ describe("getButton()", () => {
         expect(result.innerText).toBe("Save Connection");
     })
 });
+
+describe("createConnectionsList()", () => {
+    it("Creates a new ul element for connections", () => {
+        const result = createConnectionsList();
+
+        expect(result.className).toBe("connections-list");
+    })
+});
+
+describe("getConnections()", () => {
+    it("Gets connections from localStorage", () => {
+        const result = getConnections();
+
+        expect(typeof result).toBe("object");
+    })
+});
