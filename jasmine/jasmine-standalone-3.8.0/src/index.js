@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // append connections to dom as a list
     if (connectionsFromLocalStorage) {
+        console.log('c ', connections)
+        console.log(connectionsFromLocalStorage)
         render(connectionsFromLocalStorage);
     }
 });
@@ -61,32 +63,40 @@ function saveConnectionsOnClick(connections) {
     saveBtn.addEventListener("click", () => {
         // get user inputs from form
         const inputs = getInputs();
-        const nameInput = inputs.getName().value;
-        const emailInput = inputs.getEmail().value;
-        const phoneInput = inputs.getPhone().value;
+        const nameInput = inputs.getName();
+        const emailInput = inputs.getEmail();
+        const phoneInput = inputs.getPhone();
 
         // store inputs in an array
         connections.push({
-            name: nameInput,
-            email: emailInput,
-            phone: phoneInput
+            "name": nameInput.value,
+            "email": emailInput.value,
+            "phone": phoneInput.value
         });
         console.log(connections)
         // save inputs in localStorage
         localStorage.setItem("connections", JSON.stringify(connections));
+        resetForm(inputs);
     });
+}
+
+function resetForm(inputs) {
+    inputs.getName().value = "";
+    inputs.getEmail().value = "";
+    inputs.getPhone().value = "";
 }
 
 function render(connections) {
     // create a new list, li and grab its container
     const list = createConnectionsList();
-    let li = document.createElement("li");
     const container = document.querySelector(".connections-list-container");
 
     // render connections to the dom as an unordered list
     connections.map(connection => {
-        li.innerHTML = `<a href="#">${connection.name}</a>`;
-        list.appendChild(li);
+        console.log(connection)
+        list.innerHTML += `
+            <li class="connection"><a href="#">${connection.name}</a></li>
+        `;
     });
 
     container.appendChild(list);
