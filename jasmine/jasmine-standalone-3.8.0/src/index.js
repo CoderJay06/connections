@@ -12,20 +12,24 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-    const connections = [];
-    let connectionsFromLocalStorage = [];
-
-    saveConnectionsOnClick(connections);
-    connectionsFromLocalStorage = getConnections();
-
-
-    // append connections to dom as a list
-    if (connectionsFromLocalStorage) {
+    // let connectionsFromLocalStorage = [];
+    let connections = [];
+    const connectionsFromLocalStorage = getConnections();
+     // append connections to dom as a list
+     if (connectionsFromLocalStorage) {
         console.log('c ', connections)
-        console.log(connectionsFromLocalStorage)
-        render(connectionsFromLocalStorage);
+        console.log('c from ls ', connectionsFromLocalStorage)
+        connections = connectionsFromLocalStorage;
+        render(connections);
     }
+    saveConnectionsOnClick(connections);
+    console.log('DomLoaded')
 });
+
+function getConnections() {
+    // get connections from local storage and return them
+    return JSON.parse(localStorage.getItem("connections"));
+}
 
 function getInputs() {
     return (
@@ -73,10 +77,11 @@ function saveConnectionsOnClick(connections) {
             "email": emailInput.value,
             "phone": phoneInput.value
         });
-        console.log(connections)
+        console.log('connections ', connections)
+        resetForm(inputs);
         // save inputs in localStorage
         localStorage.setItem("connections", JSON.stringify(connections));
-        resetForm(inputs);
+        render(connections);
     });
 }
 
@@ -88,24 +93,20 @@ function resetForm(inputs) {
 
 function render(connections) {
     // create a new list, li and grab its container
-    const list = createConnectionsList();
     const container = document.querySelector(".connections-list-container");
-
+    let list = document.querySelector(".connections-list");
+    let listItems = "";
+    console.log('render')
     // render connections to the dom as an unordered list
     connections.map(connection => {
-        console.log(connection)
-        list.innerHTML += `
+        listItems += `
             <li class="connection"><a href="#">${connection.name}</a></li>
         `;
     });
-
+    list.innerHTML = listItems;
     container.appendChild(list);
 }
 
-function getConnections() {
-    // get connections from local storage and return them
-    return JSON.parse(localStorage.getItem("connections"));
-}
 
 function createConnectionsList() {
     const ul = document.createElement("ul");
