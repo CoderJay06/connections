@@ -47,18 +47,41 @@ input:hover {
     opacity: 70%;
 }
 
-.save-btn {
+.btn {
     display: inline-block;
-    background-color: yellow;
-    margin: 15px auto;
+    margin: 5px auto;
     padding: 5px 15px;
     border-radius: 10px;
     text-decoration: none;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: bolder;
-    color: navy;
+    cursor: pointer;
 }
 
-.save-btn:hover {
+.btn:hover,
+.btn:focus {
     opacity: 70%;
+}
+
+.save-btn {
+    background-color: yellow;
+    color: slateblue;
+}
+
+.save-btn:hover,
+.save-btn:focus {
+    background-color: #fff;
+    color: slateblue;
+}
+
+.remove-btn {
+    background-color: slateblue;
+    color: yellow;
+    display: none;
+}
+
+.remove-btn:hover,
+.remove-btn:focus {
+    background-color: yellow;
+    color: slateblue;
 }
