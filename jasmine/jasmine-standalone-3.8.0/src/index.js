@@ -129,6 +129,7 @@ function setupConnectionsDb() {
             alert("Successfully loaded connections");
 
             connectionsDb = request.result;
+            displayData();
         };
 
         request.onupgradeneeded = (e) => {
@@ -169,6 +170,7 @@ function saveConnectionsToDb(newConnection) {
 
     transaction.oncomplete = () => {
         console.log("Transaction completed");
+        displayData();
     }
 
     transaction.onerror = () => {
@@ -190,6 +192,50 @@ function render(connections) {
     });
     list.innerHTML = listItems;
     container.appendChild(list);
+}
+
+function displayData() {
+     // create a new list, li and grab its container
+    const container = document.querySelector(".connections-list-container");
+    let list = document.querySelector(".connections-list");
+    while (list.firstChild) {
+        list.removeChild(list.firstChild);
+    }
+
+    let objectStore = connectionsDb
+        .transaction("connections")
+        .objectStore("connections");
+    
+    objectStore.openCursor().onsuccess = (e) => {
+        let cursor = e.target.result;
+
+        if (cursor) {
+            let listItem = document.createElement("li");
+            let name = document.createElement("p");
+            let email = document.createElement("p");
+            let phone = document.createElement("p");
+
+            listItem.appendChild(name);
+            listItem.appendChild(email);
+            listItem.appendChild(phone);
+            list.appendChild(listItem);
+
+            name.textContent = cursor.value.name;
+            email.textContent = cursor.value.email;
+            phone.textContent = cursor.value.phone;
+
+            listItem.setAttribute("data-connection-id", cursor.value.id);
+
+            cursor.continue();
+        } else {
+            if (!list.firstChild) {
+                let listItem = document.createElement("li");
+                listItem.textContent = "No connection stored";
+                list.appendChild(listItem);
+            }
+        }
+        console.log("Connections displayed")
+    }
 }
 
 
