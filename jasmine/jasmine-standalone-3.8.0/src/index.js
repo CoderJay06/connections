@@ -122,11 +122,11 @@ function setupConnectionsDb() {
         let request = window.indexedDB.open("connections", 1);
 
         request.onerror = () => {
-            alert("Connections not loaded");
+            console.log("Connections not loaded");
         };
 
         request.onsuccess = () => {
-            alert("Successfully loaded connections");
+            console.log("Successfully loaded connections");
 
             connectionsDb = request.result;
             displayData();
@@ -206,33 +206,34 @@ function displayData() {
         let cursor = e.target.result;
 
         if (cursor) {
-            let listItem = document.createElement("li");
+            let card = document.createElement("div");
+            card.className = "connection-card";
             let name = document.createElement("p");
             let email = document.createElement("p");
             let phone = document.createElement("p");
 
-            listItem.appendChild(name);
-            listItem.appendChild(email);
-            listItem.appendChild(phone);
-            list.appendChild(listItem);
+            card.appendChild(name);
+            card.appendChild(email);
+            card.appendChild(phone);
+            list.appendChild(card);
 
             name.textContent = cursor.value.name;
             email.textContent = cursor.value.email;
             phone.textContent = cursor.value.phone;
 
-            listItem.setAttribute("data-connection-id", cursor.value.id);
+            card.setAttribute("data-connection-id", cursor.value.id);
 
             let deleteButton = document.createElement("button");
-            listItem.appendChild(deleteButton);
+            card.appendChild(deleteButton);
             deleteButton.textContent = "Remove";
             deleteButton.addEventListener("click", removeItem);
 
             cursor.continue();
         } else {
             if (!list.firstChild) {
-                let listItem = document.createElement("li");
-                listItem.textContent = "No connections store";
-                list.appendChild(listItem);
+                let error = document.createElement("p");
+                error.textContent = "No connections store";
+                list.appendChild(error);
             }
         }
         console.log("Connections displayed")
@@ -255,9 +256,9 @@ function removeItem(e) {
         console.log(`Connection ${connectionId} is removed`);
 
         if (!list.firstChild) {
-            let listItem = document.createElement("li");
-            listItem.textContent = "No connections store";
-            list.appendChild(listItem);
+            let error = document.createElement("li");
+            error.textContent = "No connections store";
+            list.appendChild(error);
         }
     }
 }
