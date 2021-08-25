@@ -85,3 +85,17 @@ input:hover {
     background-color: yellow;
     color: slateblue;
 }
+
+.connections-list {
+    list-style-type: none;
+    background: greenyellow;
+}
+
+li {
+    border-bottom: 1px solid whitesmoke;
+}
+
+li:last-child {
+    border: none;
+}
+

@@ -158,11 +158,7 @@ function saveConnectionsToDb(newConnection) {
 
     let objectStore = transaction.objectStore("connections");
 
-    let request = objectStore.add({
-        name: connection.name,
-        email: connection.email,
-        phone: connection.phone
-    });
+    let request = objectStore.add(newConnection);
 
     request.onsuccess = () => {
         console.log(`Successfully stored ${connection.name} to db`);
@@ -226,11 +222,16 @@ function displayData() {
 
             listItem.setAttribute("data-connection-id", cursor.value.id);
 
+            let deleteButton = document.createElement("button");
+            listItem.appendChild(deleteButton);
+            deleteButton.textContent = "Remove";
+            deleteButton.addEventListener("click", removeItem);
+
             cursor.continue();
         } else {
             if (!list.firstChild) {
                 let listItem = document.createElement("li");
-                listItem.textContent = "No connection stored";
+                listItem.textContent = "No connections store";
                 list.appendChild(listItem);
             }
         }
@@ -238,6 +239,28 @@ function displayData() {
     }
 }
 
+function removeItem(e) {
+    let connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
+
+    let transaction = connectionsDb.transaction(["connections"], "readwrite");
+
+    let objectStore = transaction.objectStore("connections");
+
+    objectStore.delete(connectionId);
+
+    transaction.oncomplete = () => {
+        e.target.parentNode.parentNode.removeChild(e.target.parentNode);
+        const list = document.querySelector(".connections-list");
+
+        console.log(`Connection ${connectionId} is removed`);
+
+        if (!list.firstChild) {
+            let listItem = document.createElement("li");
+            listItem.textContent = "No connections store";
+            list.appendChild(listItem);
+        }
+    }
+}
 
 function createConnectionsList() {
     const ul = document.createElement("ul");
