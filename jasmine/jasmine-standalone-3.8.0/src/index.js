@@ -16,9 +16,21 @@ const DOM = (
             getPhone: function() {
                 return document.querySelector(".phone");
             },
-            
-            getButton: function() {
+
+            getSaveBtn: function() {
                 return document.querySelector(".save-btn");
+            },
+
+            getRemoveBtn: function() {
+                return document.querySelector(".remove-btn");
+            },
+
+            getListContainer: function() {
+                return document.querySelector(".connections-list-container");
+            },
+
+            getList: function() {
+                return document.querySelector(".connections-list");
             }
         }
 })();
@@ -33,8 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function saveConnectionsOnClick() {
-    const saveBtn = DOM.getButton();
-    // const removeBtn = document.querySelector(".remove-btn");
+    const saveBtn = DOM.getSaveBtn();
+    const removeBtn = DOM.getRemoveBtn();
 
     // handle saving connection
     saveBtn.addEventListener("click", (e) => {
@@ -53,26 +65,12 @@ function saveConnectionsOnClick() {
         // save new connection data to indexedDB
         saveConnectionsToDb(newConnection);
         resetForm();
-        // removeBtn.style.display = "inline-block";
+        removeBtn.style.display = "inline-block";
     });
 }
 
 function removeConnectionsOnClick(connections) {
-    const removeBtn = document.querySelector(".remove-btn");
-    // add event listener for remove button
-    removeBtn.addEventListener("dblclick", (e) => {
-        e.preventDefault();
-        removeBtn.style.display = "none";
-
-        // remove connections from localStorage
-        localStorage.removeItem("connections");
-
-        // reset connections array
-        connections = [];
-
-        // render empty array
-        render(connections);
-    });
+    // remove all connections from db
 }
 
 function resetForm(inputs) {
@@ -93,7 +91,7 @@ function setupConnectionsDb() {
             console.log("Successfully loaded connections");
 
             connectionsDb = request.result;
-            displayData();
+            renderConnections();
         };
 
         request.onupgradeneeded = (e) => {
@@ -115,13 +113,8 @@ function setupConnectionsDb() {
 
 function saveConnectionsToDb(newConnection) {
     let connection = newConnection;
-    console.log('db in saveConnectionsToDb ', connectionsDb)
-    console.log('newConnection ', connection);
-
     let transaction = connectionsDb.transaction(["connections"], "readwrite");
-
     let objectStore = transaction.objectStore("connections");
-
     let request = objectStore.add(newConnection);
 
     request.onsuccess = () => {
@@ -130,7 +123,7 @@ function saveConnectionsToDb(newConnection) {
 
     transaction.oncomplete = () => {
         console.log("Transaction completed");
-        displayData();
+        renderConnections();
     }
 
     transaction.onerror = () => {
@@ -138,26 +131,11 @@ function saveConnectionsToDb(newConnection) {
     }
 }
 
-function render(connections) {
-    // create a new list, li and grab its container
-    const container = document.querySelector(".connections-list-container");
-    let list = document.querySelector(".connections-list");
-    let listItems = "";
-    console.log('render')
-    // render connections to the dom as an unordered list
-    connections.map(connection => {
-        listItems += `
-            <li class="connection"><a href="#">${connection.name}</a></li>
-        `;
-    });
-    list.innerHTML = listItems;
-    container.appendChild(list);
-}
-
-function displayData() {
+function renderConnections() {
      // create a new list, li and grab its container
-    const container = document.querySelector(".connections-list-container");
-    let list = document.querySelector(".connections-list");
+    const container = DOM.getListContainer();
+    let list = DOM.getList();
+
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
@@ -200,22 +178,19 @@ function displayData() {
                 list.appendChild(error);
             }
         }
-        console.log("Connections displayed")
     }
 }
 
 function removeItem(e) {
     let connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
-
     let transaction = connectionsDb.transaction(["connections"], "readwrite");
-
     let objectStore = transaction.objectStore("connections");
 
     objectStore.delete(connectionId);
 
     transaction.oncomplete = () => {
         e.target.parentNode.parentNode.removeChild(e.target.parentNode);
-        const list = document.querySelector(".connections-list");
+        const list = DOM.getList();
 
         console.log(`Connection ${connectionId} is removed`);
 
@@ -225,12 +200,6 @@ function removeItem(e) {
             list.appendChild(error);
         }
     }
-}
-
-function createConnectionsList() {
-    const ul = document.createElement("ul");
-    ul.className = "connections-list";
-    return ul;
 }
 
 function printConnections(connections) {
