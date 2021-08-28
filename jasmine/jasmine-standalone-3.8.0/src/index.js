@@ -1,79 +1,48 @@
-/*
-    TODO:
+const DOM = (
+    function() {
+        return {
+            getForm: function() {
+                return document.getElementById("connections-form");
+            },
 
-    - add event listeners to handle user input
-    - setup save button
-    - store connections in localStorage on submit
+            getName: function() {
+                return document.querySelector(".name");
+            },
 
-    functions:
-        - getName(), getEmail(), getPhone(), getForm()
-        - handleSave()
+            getEmail: function() {
+                return document.querySelector(".email");
+            },
 
- */
+            getPhone: function() {
+                return document.querySelector(".phone");
+            },
+            
+            getButton: function() {
+                return document.querySelector(".save-btn");
+            }
+        }
+})();
+
 let connectionsDb;
 
 document.addEventListener("DOMContentLoaded", () => {
-    // let connectionsFromLocalStorage = [];
     let connections = [];
-    // const connectionsFromLocalStorage = getConnections();
-    const removeBtn = document.querySelector(".remove-btn");
+
     setupConnectionsDb();
-     // append connections to dom as a list
-    //  if (connectionsFromLocalStorage) {
-    //     removeBtn.style.display = "inline-block";
-    //     connections = connectionsDb;
-    //     render(connections);
-    // }
-    // removeConnectionsOnClick(connections);
-    saveConnectionsOnClick(connections);
-    console.log('DomLoaded')
+    saveConnectionsOnClick();
 });
 
-function getConnections() {
-    // get connections from local storage and return them
-    return JSON.parse(localStorage.getItem("connections"));
-}
+function saveConnectionsOnClick() {
+    const saveBtn = DOM.getButton();
+    // const removeBtn = document.querySelector(".remove-btn");
 
-function getInputs() {
-    return (
-        function() {
-            const form = getForm();
-
-            return {
-                getName: function() {
-                    return form.children[0];
-                },
-
-                getEmail: function() {
-                    return form.children[2];
-                },
-
-                getPhone: function() {
-                    return form.children[4];
-                },
-            }
-    })();
-}
-
-function getForm() {
-    return document.getElementById("connections-form");
-}
-
-function getButton() {
-    return document.querySelector(".save-btn");
-}
-
-function saveConnectionsOnClick(connections) {
-    const saveBtn = getButton();
-    const removeBtn = document.querySelector(".remove-btn");
     // handle saving connection
     saveBtn.addEventListener("click", (e) => {
         e.preventDefault();
         // get user inputs from form
-        const inputs = getInputs();
-        const nameInput = inputs.getName();
-        const emailInput = inputs.getEmail();
-        const phoneInput = inputs.getPhone();
+        const nameInput = DOM.getName();
+        const emailInput = DOM.getEmail();
+        const phoneInput = DOM.getPhone();
 
         const newConnection = {
             "name": nameInput.value,
@@ -81,15 +50,10 @@ function saveConnectionsOnClick(connections) {
             "phone": phoneInput.value
         };
 
-        // store inputs in an array
-        connections.push(newConnection);
-        console.log('connections ', connections)
-        // // save inputs in localStorage
-        // localStorage.setItem("connections", JSON.stringify(connections));
+        // save new connection data to indexedDB
         saveConnectionsToDb(newConnection);
-        resetForm(inputs);
-        removeBtn.style.display = "inline-block";
-        // render(connections);
+        resetForm();
+        // removeBtn.style.display = "inline-block";
     });
 }
 
@@ -112,9 +76,9 @@ function removeConnectionsOnClick(connections) {
 }
 
 function resetForm(inputs) {
-    inputs.getName().value = "";
-    inputs.getEmail().value = "";
-    inputs.getPhone().value = "";
+    DOM.getName().value = "";
+    DOM.getEmail().value = "";
+    DOM.getPhone().value = "";
 }
 
 function setupConnectionsDb() {

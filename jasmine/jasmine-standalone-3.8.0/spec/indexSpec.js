@@ -4,7 +4,7 @@
         - handleSave()
 */
 
-
+/*
 describe("printConnections()", () => {
     it("Prints all connections", () => {
         // arrange
@@ -78,3 +78,5 @@ describe("getConnections()", () => {
         expect(typeof result).toBe("object");
     })
 });
+
+*/
