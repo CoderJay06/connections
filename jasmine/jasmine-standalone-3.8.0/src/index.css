@@ -1,41 +1,18 @@
 
 body {
     margin: 0;
-    padding: 0;
+    text-align: center;
     background-color: wheat;
     font-family: 'Courgette', cursive, 'Open Sans', sans-serif, 'Roboto', sans-serif;
 }
 
-main {
-    margin: 0 auto;
-}
-
-#heading {
-    text-align: center;
-    text-shadow: #000;
-    font-size: 30px;
-}
-
-#connections-form {
-    display: block;
-    background-color: slateblue;
-    opacity: 0.9;
-    margin: 0 10px 20px 10px;
-    padding: 55px 0;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    border-radius: 5px;
-    text-align: center;
-}
-label {
-    font-weight: bolder;
-    font-size: 15px;
+form {
+    margin: auto 1.5em;
+    padding: 5em;
 }
 
 input {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 5px;
+    margin-top: 0.8em;
     padding: 5px;
     width: 60%;
     border: 2px solid wheat;
@@ -45,6 +22,25 @@ input {
 
 input:hover {
     opacity: 70%;
+}
+
+input:focus {
+    background: wheat;
+}
+
+#heading {
+    text-align: center;
+    text-shadow: #000;
+    font-size: 2rem;
+}
+
+#connections-form {
+    display: block;
+    background-color: slateblue;
+    opacity: 0.9;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 2%;
 }
 
 .btn {
@@ -81,24 +77,29 @@ input:hover {
 
 .remove-btn:hover,
 .remove-btn:focus {
-    background-color: yellow;
+    background-color: wheat;
     color: slateblue;
 }
 
+/* .connections-list-container {
+    width: auto;
+} */
+
 .connections-list {
     list-style-type: none;
-    padding: 10px 0;
+    padding: 1em;
+    margin: 0;
     background: whitesmoke;
 }
 
 .connection-card {
-    margin: 10px auto;
+    display: block;
+    margin: 1em auto;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    padding: 25px 35px;
-    width: 600px;
+    padding: 2em 1em;
+    max-width: 50%;
     background: #fff;
-    display: block;
     justify-content: center;
     align-items: center;
     border-radius: 5%;
@@ -120,3 +121,17 @@ button {
     border-radius: 40%;
 }
 
+/* mobile styles */
+@media (max-width: 700px) {
+    form {
+        margin: 0;
+    }
+
+    .save-btn {
+        width: 50%;
+    }
+
+    .connections-list {
+        margin: 0;
+    }
+}

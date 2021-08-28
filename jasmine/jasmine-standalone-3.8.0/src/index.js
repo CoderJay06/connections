@@ -89,7 +89,7 @@ function saveConnectionsOnClick(connections) {
         saveConnectionsToDb(newConnection);
         resetForm(inputs);
         removeBtn.style.display = "inline-block";
-        render(connections);
+        // render(connections);
     });
 }
 
