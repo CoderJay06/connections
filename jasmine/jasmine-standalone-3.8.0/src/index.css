@@ -43,28 +43,38 @@ input:focus {
     border-radius: 2%;
 }
 
+/* isplay: inline-block;
+    border: none;
+    padding: 1rem 2rem;
+    margin: 0;
+    text-decoration: none; */
+
 .btn {
     display: inline-block;
-    margin: 5px auto;
-    padding: 5px 15px;
+    font-family: inherit;
+    border: none;
+    margin: 0.5em auto;
+    padding: 0.8em 1.8em;
     border-radius: 10px;
     text-decoration: none;
     font-weight: bold;
+    font-size: 1rem;
     cursor: pointer;
+    opacity: 100%;
 }
 
-.btn:hover,
+/* .btn:hover,
 .btn:focus {
     opacity: 70%;
-}
+} */
 
 .save-btn {
     background-color: wheat;
     color: slateblue;
 }
 
-.save-btn:hover,
-.save-btn:focus {
+.save-btn:hover {
+    opacity: 70%;
     background-color: #fff;
     color: slateblue;
 }
@@ -72,11 +82,12 @@ input:focus {
 .remove-btn {
     background-color: slateblue;
     color: wheat;
-    display: none;
+    /* display: none; */
 }
 
 .remove-btn:hover,
 .remove-btn:focus {
+    opacity: 70%;
     background-color: wheat;
     color: slateblue;
 }
@@ -85,11 +96,15 @@ input:focus {
     width: auto;
 } */
 
+.connections-list-container {
+    background: whitesmoke;
+}
+
 .connections-list {
     list-style-type: none;
     padding: 1em;
     margin: 0;
-    background: whitesmoke;
+    /* background: whitesmoke; */
 }
 
 .connection-card {
