@@ -43,12 +43,6 @@ input:focus {
     border-radius: 2%;
 }
 
-/* isplay: inline-block;
-    border: none;
-    padding: 1rem 2rem;
-    margin: 0;
-    text-decoration: none; */
-
 .btn {
     display: inline-block;
     font-family: inherit;
@@ -61,12 +55,8 @@ input:focus {
     font-size: 1rem;
     cursor: pointer;
     opacity: 100%;
+    box-sizing: border-box;
 }
-
-/* .btn:hover,
-.btn:focus {
-    opacity: 70%;
-} */
 
 .save-btn {
     background-color: wheat;
@@ -85,16 +75,11 @@ input:focus {
     /* display: none; */
 }
 
-.remove-btn:hover,
-.remove-btn:focus {
+.remove-btn:hover {
     opacity: 70%;
     background-color: wheat;
     color: slateblue;
 }
-
-/* .connections-list-container {
-    width: auto;
-} */
 
 .connections-list-container {
     background: whitesmoke;
@@ -104,7 +89,6 @@ input:focus {
     list-style-type: none;
     padding: 1em;
     margin: 0;
-    /* background: whitesmoke; */
 }
 
 .connection-card {
