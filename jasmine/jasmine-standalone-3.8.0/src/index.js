@@ -134,7 +134,6 @@ function removeConnectionsOnClick(connections) {
 
 function renderConnections() {
      // grab container and list from dom
-    const container = DOM.getListContainer();
     const list = DOM.getList();
 
     while (list.firstChild) {
@@ -161,7 +160,6 @@ function renderConnections() {
 function createNewConnectionCard(cursor, list) {
     // create elements for card
     const card = document.createElement("div");
-    const removeBtn = 
     card.className = "connection-card";
     const name = document.createElement("p");
     const email = document.createElement("p");
