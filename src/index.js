@@ -1,36 +1,3 @@
-/*
-    set a dom module that contains all querying methods needed and
-    a variable to be used across function for storing the database
-*/
-const DOM = (
-    function() {
-        return {
-            getForm: function() {
-                return document.getElementById("connections-form");
-            },
-            getName: function() {
-                return document.querySelector(".name");
-            },
-            getEmail: function() {
-                return document.querySelector(".email");
-            },
-            getPhone: function() {
-                return document.querySelector(".phone");
-            },
-            getSaveBtn: function() {
-                return document.querySelector(".save-btn");
-            },
-            getRemoveBtn: function() {
-                return document.querySelector(".remove-btn");
-            },
-            getListContainer: function() {
-                return document.querySelector(".connections-list-container");
-            },
-            getList: function() {
-                return document.querySelector(".connections-list");
-            }
-        }
-})();
 let connectionsDb;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -210,3 +177,39 @@ function displayNoConnections(list) {
     error.textContent = "No connections store";
     list.appendChild(error);
 }
+
+/*
+    set a dom module that contains all querying methods needed and
+    a variable to be used across function for storing the database
+*/
+const DOM = (
+    function() {
+        return {
+            getForm: function() {
+                return document.getElementById("connections-form");
+            },
+            getName: function() {
+                return document.querySelector(".name");
+            },
+            getEmail: function() {
+                return document.querySelector(".email");
+            },
+            getPhone: function() {
+                return document.querySelector(".phone");
+            },
+            getSaveBtn: function() {
+                return document.querySelector(".save-btn");
+            },
+            getRemoveBtn: function() {
+                return document.querySelector(".remove-btn");
+            },
+            getListContainer: function() {
+                return document.querySelector(".connections-list-container");
+            },
+            getList: function() {
+                return document.querySelector(".connections-list");
+            }
+        }
+})();
+
+module.exports = DOM;
