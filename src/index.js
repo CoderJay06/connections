@@ -77,22 +77,15 @@ function removeConnectionsOnClick() {
 
 
 function handleSave(connection) {
-    let transaction = connectionsDb.transaction(["connections"], "readwrite");
-    let objectStore = transaction.objectStore("connections");
-    let request = objectStore.add(connection);
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
+    const objectStore = transaction.objectStore("connections");
+    const request = objectStore.add(connection);
 
     request.onsuccess = () => {
         console.log(`Successfully stored ${connection.name} to db`);
     }
 
-    transaction.oncomplete = () => {
-        console.log("Transaction completed");
-        renderConnections();
-    }
-
-    transaction.onerror = () => {
-        console.log("Transaction not completed. Error");
-    }
+    handleTransaction(transaction);
 }
 
 function handleRemove() {
@@ -112,17 +105,9 @@ function handleRemove() {
 }
 
 function clearConnectionsDb() {
-    let transaction = connectionsDb.transaction(["connections"], "readwrite");
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
 
-    transaction.oncomplete = () => {
-        console.log("Transaction completed");
-        renderConnections();
-    };
-
-    transaction.onerror = () => {
-        console.log(`Transaction not open, ${transaction.error}`);
-    };
-
+    handleTransaction(transaction);
     const objectStore = transaction.objectStore("connections");
 
     // request to clear all data
@@ -130,6 +115,17 @@ function clearConnectionsDb() {
 
     objectStoreRequest.onsuccess = () => {
         console.log("Connections database cleared");
+    };
+}
+
+function handleTransaction(transaction) {
+    transaction.oncomplete = () => {
+        console.log("Transaction completed");
+        renderConnections();
+    };
+
+    transaction.onerror = () => {
+        console.log(`Transaction not open, ${transaction.error}`);
     };
 }
 
