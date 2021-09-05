@@ -6,17 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
     removeConnectionsOnClick();
 });
 
+/* Database setup section */
+
 function setupConnectionsDb() {
     window.onload = () => {
         // open db
-        let request = window.indexedDB.open("connections", 1);
-
-        // handle request result
-        handleDbOpen(request);
+        const request = window.indexedDB.open("connections", 1);
+        openDb(request);
     };
 }
 
-function handleDbOpen(request) {
+function openDb(request) {
+    handleRequestToOpenDb(request);
+    addConnectionsDbToStore(request);
+}
+
+function handleRequestToOpenDb(request) {
     request.onerror = () => {
         console.log("Connections not loaded");
     };
@@ -27,12 +32,14 @@ function handleDbOpen(request) {
         connectionsDb = request.result;
         renderConnections();
     };
+}
 
+function addConnectionsDbToStore(request) {
     request.onupgradeneeded = (e) => {
         // grab reference to db
-        let db = e.target.result;
+        const db = e.target.result;
 
-        let objectStore = db.createObjectStore(
+        const objectStore = db.createObjectStore(
             "connections", { keyPath: "id", autoIncrement: true}
         );
         objectStore.createIndex("name", "name", { unique: false });
@@ -40,6 +47,8 @@ function handleDbOpen(request) {
         objectStore.createIndex("phone", "phone", { unique: false });
     }
 }
+
+/* Save connections section */
 
 function saveConnectionsOnClick() {
     const saveBtn = DOM.getSaveBtn();
@@ -71,28 +80,25 @@ function saveConnectionToDb(newConnection) {
     handleSave(newConnection);
 }
 
-function removeConnectionsOnClick() {
-    handleRemove();
+function handleSave(connection) {
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
+    handleRequestToSaveData(transaction, connection);
+    handleTransaction(transaction);
 }
 
-
-function handleSave(connection) {
-    let transaction = connectionsDb.transaction(["connections"], "readwrite");
-    let objectStore = transaction.objectStore("connections");
-    let request = objectStore.add(connection);
+function handleRequestToSaveData(transaction, connection) {
+    const objectStore = transaction.objectStore("connections");
+    const request = objectStore.add(connection);
 
     request.onsuccess = () => {
         console.log(`Successfully stored ${connection.name} to db`);
     }
+}
 
-    transaction.oncomplete = () => {
-        console.log("Transaction completed");
-        renderConnections();
-    }
+/* Remove all connections section */
 
-    transaction.onerror = () => {
-        console.log("Transaction not completed. Error");
-    }
+function removeConnectionsOnClick() {
+    handleRemove();
 }
 
 function handleRemove() {
@@ -101,7 +107,7 @@ function handleRemove() {
 
     // clear database on click
     removeBtn.addEventListener("click", () => {
-        let request = window.indexedDB.open("connections", 1);
+        const request = window.indexedDB.open("connections", 1);
 
         request.onsuccess = () => {
             connectionsDb = request.result;
@@ -112,17 +118,12 @@ function handleRemove() {
 }
 
 function clearConnectionsDb() {
-    let transaction = connectionsDb.transaction(["connections"], "readwrite");
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
+    handleTransaction(transaction);
+    handleRequestToClearData(transaction);
+}
 
-    transaction.oncomplete = () => {
-        console.log("Transaction completed");
-        renderConnections();
-    };
-
-    transaction.onerror = () => {
-        console.log(`Transaction not open, ${transaction.error}`);
-    };
-
+function handleRequestToClearData(transaction) {
     const objectStore = transaction.objectStore("connections");
 
     // request to clear all data
@@ -130,6 +131,90 @@ function clearConnectionsDb() {
 
     objectStoreRequest.onsuccess = () => {
         console.log("Connections database cleared");
+    };
+}
+
+/* Create connecion cards section */
+
+function createNewConnectionCard(cursor, list) {
+    handleCreatingConnectionCard(cursor, list);
+}
+
+function handleCreatingConnectionCard(cursor, list) {
+    // create elements for card
+    const card = document.createElement("div");
+    card.className = "connection-card";
+    const name = document.createElement("p");
+    const email = document.createElement("p");
+    const phone = document.createElement("p");
+
+    appendCardToList(card, name, email, phone, list);
+    setCardData(name, email, phone, cursor);
+
+    // set the id on connection card 
+    card.setAttribute("data-connection-id", cursor.value.id);
+    
+    addRemoveBtnToCard(card);
+}
+
+function appendCardToList(card, name, email, phone, list) {
+    // append card elements to list
+    card.appendChild(name);
+    card.appendChild(email);
+    card.appendChild(phone);
+    list.appendChild(card);
+}
+
+function setCardData(name, email, phone, cursor) {
+    // set card data to new connection input
+    name.textContent = cursor.value.name;
+    email.textContent = cursor.value.email;
+    phone.textContent = cursor.value.phone;
+}
+
+function addRemoveBtnToCard(card) {
+    // create and append a remove button to each card
+    const deleteButton = document.createElement("button");
+    card.appendChild(deleteButton);
+    deleteButton.textContent = "Remove";
+    deleteButton.addEventListener("click", removeConnection);
+}
+
+/* Remove a connection section */
+
+function removeConnection(e) {
+    const connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
+    const objectStore = transaction.objectStore("connections");
+
+    objectStore.delete(connectionId);
+
+    handleRemoveConnectionTransaction(transaction, e, connectionId);
+}
+
+function handleRemoveConnectionTransaction(transaction, e, connectionId) {
+    transaction.oncomplete = () => {
+        e.target.parentNode.parentNode.removeChild(e.target.parentNode);
+        const list = DOM.getList();
+
+        console.log(`Connection ${connectionId} is removed`);
+
+        if (!list.firstChild) {
+            displayNoConnections(list);
+        }
+    }
+}
+
+/* General functions section */
+
+function handleTransaction(transaction) {
+    transaction.oncomplete = () => {
+        console.log("Transaction completed");
+        renderConnections();
+    };
+
+    transaction.onerror = () => {
+        console.log(`Transaction not open, ${transaction.error}`);
     };
 }
 
@@ -147,12 +232,12 @@ function renderConnections() {
         list.removeChild(list.firstChild);
     }
 
-    let objectStore = connectionsDb
+    const objectStore = connectionsDb
         .transaction("connections")
         .objectStore("connections");
     
     objectStore.openCursor().onsuccess = (e) => {
-        let cursor = e.target.result;
+        const cursor = e.target.result;
 
         if (cursor) {
             // add new connection data to a card
@@ -164,64 +249,14 @@ function renderConnections() {
     }
 }
 
-function createNewConnectionCard(cursor, list) {
-    // create elements for card
-    const card = document.createElement("div");
-    card.className = "connection-card";
-    const name = document.createElement("p");
-    const email = document.createElement("p");
-    const phone = document.createElement("p");
-
-    // append card elements to list
-    card.appendChild(name);
-    card.appendChild(email);
-    card.appendChild(phone);
-    list.appendChild(card);
-
-    // set card data to new connection input
-    name.textContent = cursor.value.name;
-    email.textContent = cursor.value.email;
-    phone.textContent = cursor.value.phone;
-
-    // set the id on connection card 
-    card.setAttribute("data-connection-id", cursor.value.id);
-
-    // create and append a remove button to each card
-    const deleteButton = document.createElement("button");
-    card.appendChild(deleteButton);
-    deleteButton.textContent = "Remove";
-    deleteButton.addEventListener("click", removeItem);
-}
-
-function removeItem(e) {
-    let connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
-    let transaction = connectionsDb.transaction(["connections"], "readwrite");
-    let objectStore = transaction.objectStore("connections");
-
-    objectStore.delete(connectionId);
-
-    transaction.oncomplete = () => {
-        e.target.parentNode.parentNode.removeChild(e.target.parentNode);
-        const list = DOM.getList();
-
-        console.log(`Connection ${connectionId} is removed`);
-
-        if (!list.firstChild) {
-            displayNoConnections(list);
-        }
-    }
-}
-
 function displayNoConnections(list) {
-    let error = document.createElement("p");
+    const error = document.createElement("p");
     error.textContent = "No connections store";
     list.appendChild(error);
 }
 
-/*
-    set a dom module that contains all querying methods needed and
-    a variable to be used across function for storing the database
-*/
+/* Module that contains all querying methods needed */
+
 const DOM = (
     function() {
         return {
