@@ -3,6 +3,7 @@ let connectionsDb;
 document.addEventListener("DOMContentLoaded", () => {
     setupConnectionsDb();
     saveConnectionsOnClick();
+    removeConnectionsOnClick();
 });
 
 function setupConnectionsDb() {
@@ -70,6 +71,11 @@ function saveConnectionToDb(newConnection) {
     handleSave(newConnection);
 }
 
+function removeConnectionsOnClick() {
+    handleRemove();
+}
+
+
 function handleSave(connection) {
     let transaction = connectionsDb.transaction(["connections"], "readwrite");
     let objectStore = transaction.objectStore("connections");
@@ -89,14 +95,47 @@ function handleSave(connection) {
     }
 }
 
+function handleRemove() {
+    // remove all connections from db
+    const removeBtn = DOM.getRemoveBtn();
+
+    // clear database on click
+    removeBtn.addEventListener("click", () => {
+        let request = window.indexedDB.open("connections", 1);
+
+        request.onsuccess = () => {
+            connectionsDb = request.result;
+
+            clearConnectionsDb();
+        }
+    });
+}
+
+function clearConnectionsDb() {
+    let transaction = connectionsDb.transaction(["connections"], "readwrite");
+
+    transaction.oncomplete = () => {
+        console.log("Transaction completed");
+    };
+
+    transaction.onerror = () => {
+        console.log(`Transaction not open, ${transaction.error}`);
+    };
+
+    const objectStore = transaction.objectStore("connections");
+
+    // request to clear all data
+    const objectStoreRequest = objectStore.clear();
+
+    objectStoreRequest.onsuccess = () => {
+        console.log("Connections database cleared");
+    };
+}
+
 function resetForm(inputs) {
     DOM.getName().value = "";
     DOM.getEmail().value = "";
     DOM.getPhone().value = "";
-}
-
-function removeConnectionsOnClick(connections) {
-    // remove all connections from db
 }
 
 function renderConnections() {
@@ -211,5 +250,3 @@ const DOM = (
             }
         }
 })();
-
-module.exports = DOM;
