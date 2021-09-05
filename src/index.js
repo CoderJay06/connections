@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     removeConnectionsOnClick();
 });
 
+/* Database setup section */
+
 function setupConnectionsDb() {
     window.onload = () => {
         // open db
@@ -18,6 +20,35 @@ function openDb(request) {
     handleRequestToOpenDb(request);
     addConnectionsDbToStore(request);
 }
+
+function handleRequestToOpenDb(request) {
+    request.onerror = () => {
+        console.log("Connections not loaded");
+    };
+
+    request.onsuccess = () => {
+        console.log("Successfully loaded connections");
+
+        connectionsDb = request.result;
+        renderConnections();
+    };
+}
+
+function addConnectionsDbToStore(request) {
+    request.onupgradeneeded = (e) => {
+        // grab reference to db
+        const db = e.target.result;
+
+        const objectStore = db.createObjectStore(
+            "connections", { keyPath: "id", autoIncrement: true}
+        );
+        objectStore.createIndex("name", "name", { unique: false });
+        objectStore.createIndex("email", "email", { unique: false });
+        objectStore.createIndex("phone", "phone", { unique: false });
+    }
+}
+
+/* Save connections section */
 
 function saveConnectionsOnClick() {
     const saveBtn = DOM.getSaveBtn();
@@ -49,15 +80,25 @@ function saveConnectionToDb(newConnection) {
     handleSave(newConnection);
 }
 
-function removeConnectionsOnClick() {
-    handleRemove();
-}
-
-
 function handleSave(connection) {
     const transaction = connectionsDb.transaction(["connections"], "readwrite");
     handleRequestToSaveData(transaction, connection);
     handleTransaction(transaction);
+}
+
+function handleRequestToSaveData(transaction, connection) {
+    const objectStore = transaction.objectStore("connections");
+    const request = objectStore.add(connection);
+
+    request.onsuccess = () => {
+        console.log(`Successfully stored ${connection.name} to db`);
+    }
+}
+
+/* Remove connections section */
+
+function removeConnectionsOnClick() {
+    handleRemove();
 }
 
 function handleRemove() {
@@ -82,53 +123,6 @@ function clearConnectionsDb() {
     handleRequestToClearData(transaction);
 }
 
-function handleTransaction(transaction) {
-    transaction.oncomplete = () => {
-        console.log("Transaction completed");
-        renderConnections();
-    };
-
-    transaction.onerror = () => {
-        console.log(`Transaction not open, ${transaction.error}`);
-    };
-}
-
-function handleRequestToOpenDb(request) {
-    request.onerror = () => {
-        console.log("Connections not loaded");
-    };
-
-    request.onsuccess = () => {
-        console.log("Successfully loaded connections");
-
-        connectionsDb = request.result;
-        renderConnections();
-    };
-}
-
-function addConnectionsDbToStore(request) {
-    request.onupgradeneeded = (e) => {
-        // grab reference to db
-        const db = e.target.result;
-
-        const objectStore = db.createObjectStore(
-            "connections", { keyPath: "id", autoIncrement: true}
-        );
-        objectStore.createIndex("name", "name", { unique: false });
-        objectStore.createIndex("email", "email", { unique: false });
-        objectStore.createIndex("phone", "phone", { unique: false });
-    }
-}
-
-function handleRequestToSaveData(transaction, connection) {
-    const objectStore = transaction.objectStore("connections");
-    const request = objectStore.add(connection);
-
-    request.onsuccess = () => {
-        console.log(`Successfully stored ${connection.name} to db`);
-    }
-}
-
 function handleRequestToClearData(transaction) {
     const objectStore = transaction.objectStore("connections");
 
@@ -137,6 +131,19 @@ function handleRequestToClearData(transaction) {
 
     objectStoreRequest.onsuccess = () => {
         console.log("Connections database cleared");
+    };
+}
+
+/* General functions section */
+
+function handleTransaction(transaction) {
+    transaction.oncomplete = () => {
+        console.log("Transaction completed");
+        renderConnections();
+    };
+
+    transaction.onerror = () => {
+        console.log(`Transaction not open, ${transaction.error}`);
     };
 }
 
@@ -225,10 +232,7 @@ function displayNoConnections(list) {
     list.appendChild(error);
 }
 
-/*
-    set a dom module that contains all querying methods needed and
-    a variable to be used across function for storing the database
-*/
+/* Module that contains all querying methods needed */
 const DOM = (
     function() {
         return {
