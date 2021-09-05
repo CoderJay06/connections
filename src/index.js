@@ -134,49 +134,7 @@ function handleRequestToClearData(transaction) {
     };
 }
 
-/* General functions section */
-
-function handleTransaction(transaction) {
-    transaction.oncomplete = () => {
-        console.log("Transaction completed");
-        renderConnections();
-    };
-
-    transaction.onerror = () => {
-        console.log(`Transaction not open, ${transaction.error}`);
-    };
-}
-
-function resetForm(inputs) {
-    DOM.getName().value = "";
-    DOM.getEmail().value = "";
-    DOM.getPhone().value = "";
-}
-
-function renderConnections() {
-     // grab container and list from dom
-    const list = DOM.getList();
-
-    while (list.firstChild) {
-        list.removeChild(list.firstChild);
-    }
-
-    const objectStore = connectionsDb
-        .transaction("connections")
-        .objectStore("connections");
-    
-    objectStore.openCursor().onsuccess = (e) => {
-        const cursor = e.target.result;
-
-        if (cursor) {
-            // add new connection data to a card
-            createNewConnectionCard(cursor, list);
-            cursor.continue();
-        } else if (!list.firstChild) {
-            displayNoConnections(list);
-        }
-    }
-}
+/* Create connecion cards section */
 
 function createNewConnectionCard(cursor, list) {
     handleCreatingConnectionCard(cursor, list);
@@ -245,6 +203,50 @@ function handleRemoveConnectionTransaction(transaction, e, connectionId) {
     }
 }
 
+/* General functions section */
+
+function handleTransaction(transaction) {
+    transaction.oncomplete = () => {
+        console.log("Transaction completed");
+        renderConnections();
+    };
+
+    transaction.onerror = () => {
+        console.log(`Transaction not open, ${transaction.error}`);
+    };
+}
+
+function resetForm(inputs) {
+    DOM.getName().value = "";
+    DOM.getEmail().value = "";
+    DOM.getPhone().value = "";
+}
+
+function renderConnections() {
+     // grab container and list from dom
+    const list = DOM.getList();
+
+    while (list.firstChild) {
+        list.removeChild(list.firstChild);
+    }
+
+    const objectStore = connectionsDb
+        .transaction("connections")
+        .objectStore("connections");
+    
+    objectStore.openCursor().onsuccess = (e) => {
+        const cursor = e.target.result;
+
+        if (cursor) {
+            // add new connection data to a card
+            createNewConnectionCard(cursor, list);
+            cursor.continue();
+        } else if (!list.firstChild) {
+            displayNoConnections(list);
+        }
+    }
+}
+
 function displayNoConnections(list) {
     const error = document.createElement("p");
     error.textContent = "No connections store";
@@ -252,6 +254,7 @@ function displayNoConnections(list) {
 }
 
 /* Module that contains all querying methods needed */
+
 const DOM = (
     function() {
         return {
