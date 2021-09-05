@@ -95,7 +95,7 @@ function handleRequestToSaveData(transaction, connection) {
     }
 }
 
-/* Remove connections section */
+/* Remove all connections section */
 
 function removeConnectionsOnClick() {
     handleRemove();
@@ -177,10 +177,12 @@ function addRemoveBtnToCard(card) {
     const deleteButton = document.createElement("button");
     card.appendChild(deleteButton);
     deleteButton.textContent = "Remove";
-    deleteButton.addEventListener("click", removeItem);
+    deleteButton.addEventListener("click", removeConnection);
 }
 
-function removeItem(e) {
+/* Remove a connection section */
+
+function removeConnection(e) {
     const connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
     const transaction = connectionsDb.transaction(["connections"], "readwrite");
     const objectStore = transaction.objectStore("connections");
