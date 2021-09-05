@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupConnectionsDb() {
     window.onload = () => {
         // open db
-        let request = window.indexedDB.open("connections", 1);
+        const request = window.indexedDB.open("connections", 1);
 
         // handle request result
         handleDbOpen(request);
@@ -30,9 +30,9 @@ function handleDbOpen(request) {
 
     request.onupgradeneeded = (e) => {
         // grab reference to db
-        let db = e.target.result;
+        const db = e.target.result;
 
-        let objectStore = db.createObjectStore(
+        const objectStore = db.createObjectStore(
             "connections", { keyPath: "id", autoIncrement: true}
         );
         objectStore.createIndex("name", "name", { unique: false });
@@ -88,7 +88,7 @@ function handleRemove() {
 
     // clear database on click
     removeBtn.addEventListener("click", () => {
-        let request = window.indexedDB.open("connections", 1);
+        const request = window.indexedDB.open("connections", 1);
 
         request.onsuccess = () => {
             connectionsDb = request.result;
@@ -149,12 +149,12 @@ function renderConnections() {
         list.removeChild(list.firstChild);
     }
 
-    let objectStore = connectionsDb
+    const objectStore = connectionsDb
         .transaction("connections")
         .objectStore("connections");
     
     objectStore.openCursor().onsuccess = (e) => {
-        let cursor = e.target.result;
+        const cursor = e.target.result;
 
         if (cursor) {
             // add new connection data to a card
@@ -196,9 +196,9 @@ function createNewConnectionCard(cursor, list) {
 }
 
 function removeItem(e) {
-    let connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
-    let transaction = connectionsDb.transaction(["connections"], "readwrite");
-    let objectStore = transaction.objectStore("connections");
+    const connectionId = Number(e.target.parentNode.getAttribute("data-connection-id"));
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
+    const objectStore = transaction.objectStore("connections");
 
     objectStore.delete(connectionId);
 
@@ -215,7 +215,7 @@ function removeItem(e) {
 }
 
 function displayNoConnections(list) {
-    let error = document.createElement("p");
+    const error = document.createElement("p");
     error.textContent = "No connections store";
     list.appendChild(error);
 }
