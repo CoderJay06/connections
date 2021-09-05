@@ -116,6 +116,7 @@ function clearConnectionsDb() {
 
     transaction.oncomplete = () => {
         console.log("Transaction completed");
+        renderConnections();
     };
 
     transaction.onerror = () => {
