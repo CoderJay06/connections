@@ -179,6 +179,10 @@ function renderConnections() {
 }
 
 function createNewConnectionCard(cursor, list) {
+    handleCreatingConnectionCard(cursor, list);
+}
+
+function handleCreatingConnectionCard(cursor, list) {
     // create elements for card
     const card = document.createElement("div");
     card.className = "connection-card";
@@ -186,20 +190,31 @@ function createNewConnectionCard(cursor, list) {
     const email = document.createElement("p");
     const phone = document.createElement("p");
 
+    appendCardToList(card, name, email, phone, list);
+    setCardData(name, email, phone, cursor);
+
+    // set the id on connection card 
+    card.setAttribute("data-connection-id", cursor.value.id);
+    
+    addRemoveBtnToCard(card);
+}
+
+function appendCardToList(card, name, email, phone, list) {
     // append card elements to list
     card.appendChild(name);
     card.appendChild(email);
     card.appendChild(phone);
     list.appendChild(card);
+}
 
+function setCardData(name, email, phone, cursor) {
     // set card data to new connection input
     name.textContent = cursor.value.name;
     email.textContent = cursor.value.email;
     phone.textContent = cursor.value.phone;
+}
 
-    // set the id on connection card 
-    card.setAttribute("data-connection-id", cursor.value.id);
-
+function addRemoveBtnToCard(card) {
     // create and append a remove button to each card
     const deleteButton = document.createElement("button");
     card.appendChild(deleteButton);
@@ -214,6 +229,10 @@ function removeItem(e) {
 
     objectStore.delete(connectionId);
 
+    handleRemoveConnectionTransaction(transaction, e, connectionId);
+}
+
+function handleRemoveConnectionTransaction(transaction, e, connectionId) {
     transaction.oncomplete = () => {
         e.target.parentNode.parentNode.removeChild(e.target.parentNode);
         const list = DOM.getList();
