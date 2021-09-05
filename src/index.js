@@ -10,35 +10,13 @@ function setupConnectionsDb() {
     window.onload = () => {
         // open db
         const request = window.indexedDB.open("connections", 1);
-
-        // handle request result
-        handleDbOpen(request);
+        openDb(request);
     };
 }
 
-function handleDbOpen(request) {
-    request.onerror = () => {
-        console.log("Connections not loaded");
-    };
-
-    request.onsuccess = () => {
-        console.log("Successfully loaded connections");
-
-        connectionsDb = request.result;
-        renderConnections();
-    };
-
-    request.onupgradeneeded = (e) => {
-        // grab reference to db
-        const db = e.target.result;
-
-        const objectStore = db.createObjectStore(
-            "connections", { keyPath: "id", autoIncrement: true}
-        );
-        objectStore.createIndex("name", "name", { unique: false });
-        objectStore.createIndex("email", "email", { unique: false });
-        objectStore.createIndex("phone", "phone", { unique: false });
-    }
+function openDb(request) {
+    handleRequestToOpenDb(request);
+    addConnectionsDbToStore(request);
 }
 
 function saveConnectionsOnClick() {
@@ -113,6 +91,33 @@ function handleTransaction(transaction) {
     transaction.onerror = () => {
         console.log(`Transaction not open, ${transaction.error}`);
     };
+}
+
+function handleRequestToOpenDb(request) {
+    request.onerror = () => {
+        console.log("Connections not loaded");
+    };
+
+    request.onsuccess = () => {
+        console.log("Successfully loaded connections");
+
+        connectionsDb = request.result;
+        renderConnections();
+    };
+}
+
+function addConnectionsDbToStore(request) {
+    request.onupgradeneeded = (e) => {
+        // grab reference to db
+        const db = e.target.result;
+
+        const objectStore = db.createObjectStore(
+            "connections", { keyPath: "id", autoIncrement: true}
+        );
+        objectStore.createIndex("name", "name", { unique: false });
+        objectStore.createIndex("email", "email", { unique: false });
+        objectStore.createIndex("phone", "phone", { unique: false });
+    }
 }
 
 function handleRequestToSaveData(transaction, connection) {
