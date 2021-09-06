@@ -120,17 +120,25 @@ button {
     border-radius: 40%;
 }
 
-/* mobile styles */
+/* chrome styles */
 @media (max-width: 700px) {
+    #heading {
+        font-size: 1.6rem;
+    }
+
     form {
-        margin: 0;
+        margin: 0 0.8em 0 1.105em;
+    }
+
+    input {
+        width: auto;
     }
 
     .save-btn {
-        width: 50%;
+        padding: 1em;
     }
 
-    .connections-list {
-        margin: 0;
+    .remove-btn {
+        padding: 1em;
     }
 }
