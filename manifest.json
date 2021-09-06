@@ -1,0 +1,23 @@
+{
+    "name": "Connections",
+    "description": "An extension for saving new connection's contact info",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "src/index.html",
+      "default_icon": {
+          "16": "connections.png",
+          "48": "connections.png",
+          "128": "connections.png"
+      }
+    },
+    "commands": {
+        "_execute_action": {
+          "suggested_key": {
+            "default": "Ctrl+Shift+F",
+            "mac": "MacCtrl+Shift+F"
+          },
+          "description": "Opens index.html"
+        }
+      }
+  }
