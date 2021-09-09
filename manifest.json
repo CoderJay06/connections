@@ -6,9 +6,8 @@
     "action": {
       "default_popup": "src/index.html",
       "default_icon": {
-          "16": "connections.png",
-          "48": "connections.png",
-          "128": "connections.png"
+          "16": "connections_16.png",
+          "128": "connections_128.png"
       }
     },
     "commands": {
