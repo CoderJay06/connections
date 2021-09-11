@@ -1,10 +1,12 @@
-
+/* Layout */
 body {
     margin: 0;
     text-align: center;
     background-color: wheat;
     font-family: 'Courgette', cursive, 'Open Sans', sans-serif, 'Roboto', sans-serif;
 }
+
+/* Form styles */
 
 form {
     margin: auto 1.5em;
@@ -27,6 +29,15 @@ input:hover {
 input:focus {
     background: wheat;
 }
+
+.input-error {
+    display: none;
+    border: 2px solid red;
+}
+  
+/* input:invalid:required {
+    background-image: linear-gradient(to right, pink, lightgreen);
+} */
 
 #heading {
     text-align: center;

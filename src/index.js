@@ -63,17 +63,41 @@ function saveConnectionsOnClick() {
         const emailInput = DOM.getEmail();
         const phoneInput = DOM.getPhone();
 
-        const newConnection = {
-            "name": nameInput.value,
-            "email": emailInput.value,
-            "phone": phoneInput.value
-        };
+        // validate form inputs
+        if (isValidFormInputs(nameInput, emailInput, phoneInput)) {
+            // add new connection with form inputs
+            const newConnection = {
+                "name": nameInput.value,
+                "email": emailInput.value,
+                "phone": phoneInput.value
+            };
 
-        // save new connection data to indexedDB
-        saveConnectionToDb(newConnection);
-        resetForm();
-        removeBtn.style.display = "inline-block";
+
+            // save new connection data to indexedDB
+            saveConnectionToDb(newConnection);
+            resetForm();
+            removeBtn.style.display = "inline-block";
+        }
     });
+}
+
+/* Form validations section */
+
+function isValidFormInputs(nameInput, emailInput, phoneInput) {
+    const inputError = DOM.getInputError();
+    inputError.style.display = "none";
+    const isNameValid = formValidations.checkName(nameInput);
+    const isEmailValid = formValidations.checkEmail(emailInput);
+    const isPhoneValid = formValidations.checkPhone(phoneInput);
+    
+    return isNameValid && isEmailValid && isPhoneValid;
+}
+
+function displayEmptyInputError(input) {
+    const inputError = DOM.getInputError();
+    console.log(inputError)
+    inputError.style.display = "block";
+    inputError.textContent = `${input.name} cannot be blank`;
 }
 
 function saveConnectionToDb(newConnection) {
@@ -255,7 +279,46 @@ function displayNoConnections(list) {
     list.appendChild(error);
 }
 
-/* Module that contains all querying methods needed */
+/* Modules for form validations and dom querying methods */
+
+const formValidations = (
+    function() {
+        return {
+            checkName: function(nameInput) {
+                // validate name input
+                let isValid = true;
+                console.log(nameInput)
+                if (nameInput.value.length < 1) {
+                    displayEmptyInputError(nameInput);
+                    isValid = false;
+                }
+
+                return isValid;                
+            },
+            checkEmail: function(emailInput) {
+                // validate email input
+                let isValid = true;
+                console.log(emailInput)
+                if (emailInput.value.length < 1) {
+                    displayEmptyInputError(emailInput);
+                    isValid = false;
+                }
+
+                return isValid;  
+            },
+            checkPhone: function(phoneInput) {
+                // validate phone input
+                let isValid = true;
+                console.log(phoneInput)
+                if (phoneInput.value.length < 1) {
+                    displayEmptyInputError(phoneInput);
+                    isValid = false;
+                }
+
+                return isValid;  
+            }
+        }
+})();
 
 const DOM = (
     function() {
@@ -283,6 +346,9 @@ const DOM = (
             },
             getList: function() {
                 return document.querySelector(".connections-list");
+            },
+            getInputError: function() {
+                return document.querySelector(".input-error");
             }
         }
 })();
