@@ -127,13 +127,6 @@ function hideInputErrors(nameInput, emailInput, phoneInput) {
     phoneInputError.style.display = "none";
 }
 
-function displayEmptyInputError(input) {
-    const inputError = DOM.getInputError(input);
-    console.log(inputError)
-    inputError.style.display = "block";
-    inputError.textContent = `${input.name} cannot be blank`;
-}
-
 /* Remove all connections section */
 
 function removeConnectionsOnClick() {
@@ -300,23 +293,48 @@ const formValidations = (
     function() {
         return {
             checkName: function(nameInput) {
-                let isValid = this.validate(nameInput);
-                return isValid;                
+                let isValidLength = this.validateLength(nameInput);
+                return isValidLength;                
             },
             checkEmail: function(emailInput) {
-                let isValid = this.validate(emailInput);
-                return isValid;  
+                let isValidEmail = this.validateFormat(emailInput);
+                return isValidEmail;  
             },
             checkPhone: function(phoneInput) {
-                let isValid = this.validate(phoneInput);
-                return isValid;  
+                let isValidPhone = this.validateFormat(phoneInput);
+                return isValidPhone;  
             },
-            validate: function(input) {
+            validateLength: function(input) {
                 if (input.value.length < 1) {
-                    displayEmptyInputError(input);
+                    this.displayError(input, "blank");
                     return false;
                 }
                 return true;
+            },
+            validateFormat: function(input) {
+                let regEx;
+                let isValidFormat = false;
+
+                if (input.name === "email") {
+                    regEx =
+                    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                } else if (input.name === "phone") {
+                    regEx = /^\d{10}$/;
+                } 
+                isValidFormat = regEx.test(input.value);
+
+                if (!isValidFormat) {
+                    this.displayError(input, "format");
+                }
+                return isValidFormat;
+            },
+            displayError: function(input, errorType) {
+                const inputError = DOM.getInputError(input);
+                inputError.style.display = "block";
+                inputError.textContent = 
+                    errorType === "blank"
+                    ? `${input.name} cannot be blank`
+                    : `${input.name} must be valid format`;
             }
         }
 })();
