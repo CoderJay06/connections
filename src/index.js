@@ -84,8 +84,7 @@ function saveConnectionsOnClick() {
 /* Form validations section */
 
 function isValidFormInputs(nameInput, emailInput, phoneInput) {
-    const inputError = DOM.getInputError();
-    inputError.style.display = "none";
+    hideInputErrors(nameInput, emailInput, phoneInput);
     const isNameValid = formValidations.checkName(nameInput);
     const isEmailValid = formValidations.checkEmail(emailInput);
     const isPhoneValid = formValidations.checkPhone(phoneInput);
@@ -93,8 +92,17 @@ function isValidFormInputs(nameInput, emailInput, phoneInput) {
     return isNameValid && isEmailValid && isPhoneValid;
 }
 
+function hideInputErrors(nameInput, emailInput, phoneInput) {
+    const nameInputError = DOM.getInputError(nameInput);
+    const emailInputError = DOM.getInputError(emailInput);
+    const phoneInputError = DOM.getInputError(phoneInput);
+    nameInputError.style.display = "none";
+    emailInputError.style.display = "none";
+    phoneInputError.style.display = "none";
+}
+
 function displayEmptyInputError(input) {
-    const inputError = DOM.getInputError();
+    const inputError = DOM.getInputError(input);
     console.log(inputError)
     inputError.style.display = "block";
     inputError.textContent = `${input.name} cannot be blank`;
@@ -289,8 +297,8 @@ const formValidations = (
                 let isValid = true;
                 console.log(nameInput)
                 if (nameInput.value.length < 1) {
-                    displayEmptyInputError(nameInput);
                     isValid = false;
+                    displayEmptyInputError(nameInput);
                 }
 
                 return isValid;                
@@ -300,8 +308,8 @@ const formValidations = (
                 let isValid = true;
                 console.log(emailInput)
                 if (emailInput.value.length < 1) {
-                    displayEmptyInputError(emailInput);
                     isValid = false;
+                    displayEmptyInputError(emailInput);
                 }
 
                 return isValid;  
@@ -311,8 +319,8 @@ const formValidations = (
                 let isValid = true;
                 console.log(phoneInput)
                 if (phoneInput.value.length < 1) {
-                    displayEmptyInputError(phoneInput);
                     isValid = false;
+                    displayEmptyInputError(phoneInput);
                 }
 
                 return isValid;  
@@ -347,8 +355,8 @@ const DOM = (
             getList: function() {
                 return document.querySelector(".connections-list");
             },
-            getInputError: function() {
-                return document.querySelector(".input-error");
+            getInputError: function(input) {
+                return document.querySelector(`.${input.name}-input-error`);
             }
         }
 })();
