@@ -35,6 +35,8 @@ input:focus {
 .phone-input-error {
     display: none;
     border: 2px solid red;
+    margin-bottom: auto;
+    max-width: 100%;
 }
   
 /* input:invalid:required {

@@ -62,6 +62,7 @@ function saveConnectionsOnClick() {
         const nameInput = DOM.getName();
         const emailInput = DOM.getEmail();
         const phoneInput = DOM.getPhone();
+        removeWhiteSpace(nameInput, emailInput, phoneInput);
 
         // validate form inputs
         if (isValidFormInputs(nameInput, emailInput, phoneInput)) {
@@ -79,6 +80,31 @@ function saveConnectionsOnClick() {
             removeBtn.style.display = "inline-block";
         }
     });
+}
+
+function removeWhiteSpace(nameInput, emailInput, phoneInput) {
+    nameInput.value = nameInput.value.trim();
+    emailInput.value = emailInput.value.trim();
+    phoneInput.value = phoneInput.value.trim();
+}
+
+function saveConnectionToDb(newConnection) {
+    handleSave(newConnection);
+}
+
+function handleSave(connection) {
+    const transaction = connectionsDb.transaction(["connections"], "readwrite");
+    handleRequestToSaveData(transaction, connection);
+    handleTransaction(transaction);
+}
+
+function handleRequestToSaveData(transaction, connection) {
+    const objectStore = transaction.objectStore("connections");
+    const request = objectStore.add(connection);
+
+    request.onsuccess = () => {
+        console.log(`Successfully stored ${connection.name} to db`);
+    }
 }
 
 /* Form validations section */
@@ -106,25 +132,6 @@ function displayEmptyInputError(input) {
     console.log(inputError)
     inputError.style.display = "block";
     inputError.textContent = `${input.name} cannot be blank`;
-}
-
-function saveConnectionToDb(newConnection) {
-    handleSave(newConnection);
-}
-
-function handleSave(connection) {
-    const transaction = connectionsDb.transaction(["connections"], "readwrite");
-    handleRequestToSaveData(transaction, connection);
-    handleTransaction(transaction);
-}
-
-function handleRequestToSaveData(transaction, connection) {
-    const objectStore = transaction.objectStore("connections");
-    const request = objectStore.add(connection);
-
-    request.onsuccess = () => {
-        console.log(`Successfully stored ${connection.name} to db`);
-    }
 }
 
 /* Remove all connections section */
