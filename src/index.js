@@ -293,37 +293,23 @@ const formValidations = (
     function() {
         return {
             checkName: function(nameInput) {
-                // validate name input
-                let isValid = true;
-                console.log(nameInput)
-                if (nameInput.value.length < 1) {
-                    isValid = false;
-                    displayEmptyInputError(nameInput);
-                }
-
+                let isValid = this.validate(nameInput);
                 return isValid;                
             },
             checkEmail: function(emailInput) {
-                // validate email input
-                let isValid = true;
-                console.log(emailInput)
-                if (emailInput.value.length < 1) {
-                    isValid = false;
-                    displayEmptyInputError(emailInput);
-                }
-
+                let isValid = this.validate(emailInput);
                 return isValid;  
             },
             checkPhone: function(phoneInput) {
-                // validate phone input
-                let isValid = true;
-                console.log(phoneInput)
-                if (phoneInput.value.length < 1) {
-                    isValid = false;
-                    displayEmptyInputError(phoneInput);
-                }
-
+                let isValid = this.validate(phoneInput);
                 return isValid;  
+            },
+            validate: function(input) {
+                if (input.value.length < 1) {
+                    displayEmptyInputError(input);
+                    return false;
+                }
+                return true;
             }
         }
 })();
