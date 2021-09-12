@@ -62,18 +62,30 @@ function saveConnectionsOnClick() {
         const nameInput = DOM.getName();
         const emailInput = DOM.getEmail();
         const phoneInput = DOM.getPhone();
+        removeWhiteSpace(nameInput, emailInput, phoneInput);
 
-        const newConnection = {
-            "name": nameInput.value,
-            "email": emailInput.value,
-            "phone": phoneInput.value
-        };
+        // validate form inputs
+        if (isValidFormInputs(nameInput, emailInput, phoneInput)) {
+            // add new connection with form inputs
+            const newConnection = {
+                "name": nameInput.value,
+                "email": emailInput.value,
+                "phone": phoneInput.value
+            };
 
-        // save new connection data to indexedDB
-        saveConnectionToDb(newConnection);
-        resetForm();
-        removeBtn.style.display = "inline-block";
+
+            // save new connection data to indexedDB
+            saveConnectionToDb(newConnection);
+            resetForm();
+            removeBtn.style.display = "inline-block";
+        }
     });
+}
+
+function removeWhiteSpace(nameInput, emailInput, phoneInput) {
+    nameInput.value = nameInput.value.trim();
+    emailInput.value = emailInput.value.trim();
+    phoneInput.value = phoneInput.value.trim();
 }
 
 function saveConnectionToDb(newConnection) {
@@ -93,6 +105,26 @@ function handleRequestToSaveData(transaction, connection) {
     request.onsuccess = () => {
         console.log(`Successfully stored ${connection.name} to db`);
     }
+}
+
+/* Form validations section */
+
+function isValidFormInputs(nameInput, emailInput, phoneInput) {
+    hideInputErrors(nameInput, emailInput, phoneInput);
+    const isNameValid = formValidations.checkName(nameInput);
+    const isEmailValid = formValidations.checkEmail(emailInput);
+    const isPhoneValid = formValidations.checkPhone(phoneInput);
+    
+    return isNameValid && isEmailValid && isPhoneValid;
+}
+
+function hideInputErrors(nameInput, emailInput, phoneInput) {
+    const nameInputError = DOM.getInputError(nameInput);
+    const emailInputError = DOM.getInputError(emailInput);
+    const phoneInputError = DOM.getInputError(phoneInput);
+    nameInputError.style.display = "none";
+    emailInputError.style.display = "none";
+    phoneInputError.style.display = "none";
 }
 
 /* Remove all connections section */
@@ -255,7 +287,57 @@ function displayNoConnections(list) {
     list.appendChild(error);
 }
 
-/* Module that contains all querying methods needed */
+/* Modules for form validations and dom querying methods */
+
+const formValidations = (
+    function() {
+        return {
+            checkName: function(nameInput) {
+                let isValidLength = this.validateLength(nameInput);
+                return isValidLength;                
+            },
+            checkEmail: function(emailInput) {
+                let isValidEmail = this.validateFormat(emailInput);
+                return isValidEmail;  
+            },
+            checkPhone: function(phoneInput) {
+                let isValidPhone = this.validateFormat(phoneInput);
+                return isValidPhone;  
+            },
+            validateLength: function(input) {
+                if (input.value.length < 1) {
+                    this.displayError(input, "blank");
+                    return false;
+                }
+                return true;
+            },
+            validateFormat: function(input) {
+                let regEx;
+                let isValidFormat = false;
+
+                if (input.name === "email") {
+                    regEx =
+                    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                } else if (input.name === "phone") {
+                    regEx = /^\d{10}$/;
+                } 
+                isValidFormat = regEx.test(input.value);
+
+                if (!isValidFormat) {
+                    this.displayError(input, "format");
+                }
+                return isValidFormat;
+            },
+            displayError: function(input, errorType) {
+                const inputError = DOM.getInputError(input);
+                inputError.style.display = "block";
+                inputError.textContent = 
+                    errorType === "blank"
+                    ? `${input.name} cannot be blank`
+                    : `${input.name} must be valid format`;
+            }
+        }
+})();
 
 const DOM = (
     function() {
@@ -283,6 +365,9 @@ const DOM = (
             },
             getList: function() {
                 return document.querySelector(".connections-list");
+            },
+            getInputError: function(input) {
+                return document.querySelector(`.${input.name}-input-error`);
             }
         }
 })();

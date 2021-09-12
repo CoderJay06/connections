@@ -19,15 +19,18 @@
       <div id="form-container">
           <form id="connections-form">
               <!-- <label for="name_input">Name</label> -->
-              <input class="name" name="name" type="text" value="" placeholder="Name" />
+              <p class="name-input-error"></p>
+              <input class="name" name="name" type="text" placeholder="Name" minlength="2" />
               <br />
               <!-- <label for="email_input">Email</label> -->
-              <input class="email" name="email" type="email" value="" placeholder="Email" />
+              <p class="email-input-error"></p>
+              <input class="email" name="email" type="mail" placeholder="Email" />
               <br />
               <!-- <label for="phone_input">Phone</label> -->
-              <input class="phone" name="phone" type="tel" value="" placeholder="Phone" />
+              <p class="phone-input-error"></p>
+              <input class="phone" name="phone" type="tel" placeholder="Phone" />
               <br />
-              <button class="btn save-btn">Save Connection</button>
+              <button class="btn save-btn" type="submit">Save Connection</button>
           </form>
       </div>
       <div class="connections-list-container">
