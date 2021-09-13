@@ -1,6 +1,9 @@
 # connections
 A google chrome extension for storing the contact info of new connection's met on the web.
 
+# Add from Chrome Web Store
+* [Connections](https://chrome.google.com/webstore/detail/connections/llogeafhdijdbgdomgdpdhipjinghghk/related)
+
 # Languages
 <ul>
   <li>Javascript</li>
